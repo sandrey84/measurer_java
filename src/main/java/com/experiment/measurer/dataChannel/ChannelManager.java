@@ -39,7 +39,7 @@ public class ChannelManager {
 		String data = dataChannel.read();
 
 		if (data != null) {
-			log.debug("read ----> " + data);
+			log.trace("read ----> " + data);
 			incomingDataJoiner.processMessage(data);
 		}
 	}

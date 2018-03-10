@@ -20,12 +20,19 @@ public class IncomingMessageDispatcher {
 	@Autowired
 	private ScanService scanService;
 
+	private static final String END_OF_MESSAGE_MARKER = "\n";
 	private static final String LOG_INFO_MESSAGE_PREFIX = "INFO_LOG_";
 	private static final String ERROR_INFO_MESSAGE_PREFIX = "ERROR_LOG_";
 	private static final String SCAN_RESULT_MESSAGE_PREFIX = "SCAN_RESULT_";
+	private static final String SINGLE_SCAN_RESULT_MESSAGE_PREFIX = "SINGLE_SCAN_RESULT_";
 
 	public void processMessage(String message) {
 		log.debug("got: {}", message);
+		//in case when few messages received in one string
+		Splitter.on(END_OF_MESSAGE_MARKER).split(message).forEach(this::dispatchMessage);
+	}
+
+		private void dispatchMessage(String message) {
 		if (message.startsWith(LOG_INFO_MESSAGE_PREFIX)) {
 			log.debug("process: {}", LOG_INFO_MESSAGE_PREFIX);
 			logService.processInfo(removePrefix(message, LOG_INFO_MESSAGE_PREFIX));
@@ -42,9 +49,15 @@ public class IncomingMessageDispatcher {
 			log.debug("process: {}", SCAN_RESULT_MESSAGE_PREFIX);
 			scanService.onScanDataAvailable(createScanData(removePrefix(message, SCAN_RESULT_MESSAGE_PREFIX)));
 			return;
-		} else {
-			log.warn("unknown message: {}", message);
 		}
+
+		if (message.startsWith(SINGLE_SCAN_RESULT_MESSAGE_PREFIX)) {
+			log.debug("process: {}", SINGLE_SCAN_RESULT_MESSAGE_PREFIX);
+			scanService.onSingleScanDataAvailable(Integer.valueOf(removePrefix(message, SINGLE_SCAN_RESULT_MESSAGE_PREFIX)));
+			return;
+		}
+
+		log.warn("unknown message: {}", message);
 	}
 
 	Map<Integer,Integer> createScanData(String rawData) {

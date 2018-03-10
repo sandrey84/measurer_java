@@ -5,8 +5,7 @@ import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 
-//TO DO turn it on
-//@Configuration
+@Configuration
 public class SchedulingConfigurerConfiguration implements SchedulingConfigurer {
 
 	@Override

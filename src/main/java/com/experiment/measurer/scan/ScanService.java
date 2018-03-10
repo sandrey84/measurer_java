@@ -12,4 +12,8 @@ public class ScanService {
 	public void onScanDataAvailable(Map<Integer, Integer> scanData) {
 		log.info("new scan data -> " + scanData);
 	}
+
+	public void onSingleScanDataAvailable(int distanceInCm) {
+		log.info("single scan -> " + distanceInCm + " cm");
+	}
 }

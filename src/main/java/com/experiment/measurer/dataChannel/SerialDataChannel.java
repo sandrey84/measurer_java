@@ -34,7 +34,7 @@ public class SerialDataChannel implements DataChannel {
 
 	@Override
 	public  String read()  {
-		log.debug("attemptToRead");
+		log.trace("attemptToRead");
 		int bytesAvailable = serialPort.bytesAvailable();
 
 		if (bytesAvailable == 0) {
